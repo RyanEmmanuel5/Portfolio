@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Project – Ryan Emmanuel Espinosa</title>
+<style>
+:root{--bg:#f4f3f1;--ink:#1f1e1c;--mute:#7a7873;--frame:#1f1e1c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171614;--ink:#ece9e4;--mute:#8d8a84;--frame:#262523}}
+:root[data-theme="dark"]{--bg:#171614;--ink:#ece9e4;--mute:#8d8a84;--frame:#262523}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:13px/1.55 Arial,Helvetica,sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+h2{font-size:15px;font-weight:700;line-height:1.3}
+.wrap{max-width:1440px;margin:0 auto;padding:0 clamp(20px,5.6vw,80px)}
+.progress{position:fixed;top:0;left:0;height:2px;width:100%;background:var(--ink);transform:scaleX(0);transform-origin:left;z-index:20;pointer-events:none}
+
+/* top bar */
+.bar{display:flex;justify-content:space-between;align-items:center;padding-top:32px}
+.ul{background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;transition:background-size .35s}
+.ul:hover{background-size:100% 1px}
+.back span{display:inline-block;transition:transform .3s ease}
+.back:hover span{transform:translateX(-5px)}
+.pager{display:flex;gap:22px;color:var(--mute)}
+.pager b{color:var(--ink);font-weight:400}
+
+/* title */
+.head{padding:9vw 0 5vw}
+.kicker{color:var(--mute);margin-bottom:22px}
+h1{font-size:clamp(52px,11vw,170px);font-weight:700;letter-spacing:-.075em;line-height:1;display:flex;flex-wrap:wrap;column-gap:.28em;padding-right:.075em}
+.w{display:inline-flex;white-space:nowrap}
+h1 i{display:inline-block;font-style:normal;padding:.08em .1em .2em 0;margin:-.08em -.1em -.2em 0;opacity:0;transform:translateY(40%);animation:rise .9s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--n)*70ms)}
+@keyframes rise{to{transform:none;opacity:1}}
+
+/* meta */
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-bottom:56px}
+.meta dt{color:var(--mute);margin-bottom:4px}
+
+/* image frames: black and white, color on hover */
+.frame{background:var(--frame);display:grid;place-items:center;overflow:hidden;clip-path:inset(0 100% 0 0);transition:clip-path 1s cubic-bezier(.7,0,.2,1) calc(var(--d,0ms) + 150ms)}
+.on.frame,.on .frame{clip-path:inset(0)}
+.frame .inner{overflow:hidden;transform:translate(var(--mx,0px),var(--my,0px));transition:width .6s cubic-bezier(.2,.8,.2,1),box-shadow .6s,transform .35s ease-out}
+
+/* single-slide carousel */
+.cover{aspect-ratio:2.1;position:relative;user-select:none;touch-action:pan-y;clip-path:none}
+.cover:focus:not(:focus-visible){outline:none}
+.cover .inner{position:absolute;inset:0;width:auto;aspect-ratio:auto;transform:none;overflow:hidden;cursor:grab;clip-path:inset(0 100% 0 0);transition:clip-path 1.1s cubic-bezier(.7,0,.2,1) .2s}
+.cover.on .inner{clip-path:inset(0)}
+.track{display:flex;width:100%;height:100%;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.slide{flex:none;width:100%;height:100%;padding:clamp(16px,3vw,40px) clamp(16px,3vw,40px) clamp(36px,5vw,56px)}
+.ph{display:block;width:100%;height:100%;object-fit:contain;-webkit-user-drag:none;filter:grayscale(1) contrast(1.05);transition:filter .6s ease}
+.cover:hover .ph{filter:none}
+.nav{position:absolute;top:50%;margin-top:-30px;height:60px;z-index:2;background:none;border:0;color:#ece9e4;font:inherit;font-size:22px;cursor:pointer;padding:0 18px;opacity:.55;transition:opacity .3s,transform .3s}
+.nav:hover{opacity:1}
+.pv{left:1.5%}.pv:hover{transform:translateX(-5px)}
+.nx{right:1.5%}.nx:hover{transform:translateX(5px)}
+.count{position:absolute;top:14px;right:18px;z-index:2;color:#ece9e4;font-size:12px;opacity:.7;pointer-events:none}
+.dots{position:absolute;bottom:4%;left:0;right:0;z-index:2;display:flex;justify-content:center;gap:8px;pointer-events:none}
+.dots button{width:18px;height:10px;border:0;background:none;cursor:pointer;position:relative;pointer-events:auto;transition:width .4s ease}
+.dots button::after{content:"";position:absolute;left:0;right:0;top:4px;height:2px;background:#ece9e4;opacity:.35;transition:opacity .3s}
+.dots button.cur{width:34px}.dots button.cur::after{opacity:1}
+
+/* text rows share the index page column grid */
+.row{display:grid;grid-template-columns:36.3% 41.4% 22.3%;margin-top:96px}
+.row h2{padding-left:2.9%}
+.row p{max-width:62ch;text-align:justify;hyphens:auto}
+.links{display:flex;gap:34px;margin:96px 0 0 36.3%}
+
+/* next project */
+.next{display:block;margin-top:140px;padding-bottom:120px}
+.next small{display:block;color:var(--mute);margin-bottom:10px}
+.next strong{display:flex;align-items:center;gap:.25em;font-size:clamp(34px,6vw,84px);font-weight:700;letter-spacing:-.07em;line-height:1;transition:letter-spacing .5s cubic-bezier(.2,.8,.2,1)}
+.next em{font-style:normal;display:inline-block;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.next:hover strong{letter-spacing:-.04em}
+.next:hover em{transform:translateX(.3em)}
+
+
+/* page transition in: the dark screen lifts away */
+.pt-in{display:none;position:fixed;inset:0;z-index:50;background:var(--frame);align-items:center;justify-content:center;pointer-events:none;transition:transform .95s cubic-bezier(.7,0,.2,1)}
+html.pt-on .pt-in{display:flex}
+html.pt-out .pt-in{transform:translateY(-100%)}
+.pt-in span{color:#ece9e4;font-weight:700;letter-spacing:-.07em;line-height:1;font-size:clamp(40px,9vw,140px);transition:opacity .4s ease}
+html.pt-out .pt-in span{opacity:0}
+html.pt-d h1 i{animation-delay:calc(var(--n)*70ms + .7s)}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0ms)}
+.rv.on{opacity:1;transform:none}
+
+@media (max-width:900px){
+ .meta{grid-template-columns:1fr 1fr}
+ .row{grid-template-columns:1fr;gap:14px;margin-top:64px}.row h2{padding:0}
+ .links{margin-left:0}
+ .cover{aspect-ratio:1.25}
+}
+@media (prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+ h1 i{transform:none;opacity:1}.rv{opacity:1;transform:none}
+}
+</style>
+<script>try{if(sessionStorage.getItem('pt'))document.documentElement.classList.add('pt-on','pt-d')}catch(e){}</script>
+</head>
+<body>
+<div class="progress" id="pg"></div>
+<div class="pt-in"><span id="ptname"></span></div>
+<header class="bar wrap">
+ <a class="back ul" href="index.html#projects"><span>←</span> Back to projects</a>
+ <div class="pager" id="pager"></div>
+</header>
+<main class="wrap" id="app"></main>
+
+<script>
+// ---- EDIT YOUR PROJECTS HERE (order = project 01 to 09) ----
+const PH='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe6fb"/><stop offset="1" stop-color="#fff"/></linearGradient></defs><rect width="200" height="200" fill="url(#g)"/><g fill="#fff"><circle cx="70" cy="48" r="17"/><rect x="48" y="52" width="62" height="16" rx="8"/><circle cx="104" cy="60" r="8"/></g><path d="M0 130c30-15 55-5 85-5s70 5 115 15v60H0z" fill="#c6e27c"/><path d="M0 160c30 5 50-12 90-14s70 12 110 10v44H0z" fill="#8ba500"/></svg>');
+const T='Write a short paragraph here. Keep it clear and to the point, in two or three sentences.';
+
+// One block per project, in the same order as the cards on the home page (01 to 09).
+// imgs: any number of pictures, e.g. ['images/p1-a.jpg','images/p1-b.jpg','images/p1-c.jpg']. They show one at a time (arrows, dots, swipe). Empty = 5 placeholders.
+// links: the project links shown in the Links section, e.g. links:[['View live','https://...'],['GitHub','https://github.com/...']]  (empty = shows Coming soon)
+const PROJECTS=[
+ { // 01
+  name:'Philippine Energy Analysis', cat:'Data Analytics', year:'2025', role:'Data Analyst', tools:'Tableau',
+  overview:'An interactive data analytics dashboard examining Philippine energy consumption and acquisition trends across various economic sectors from 2014 to 2022. It presents key energy indicators and historical patterns to provide a comprehensive view of the country energy landscape.', 
+  problem:'Analyzing national energy data across multiple years and sectors can be challenging due to the volume of information and variations in consumption patterns. Without a structured presentation, identifying significant trends, comparing sector contributions, and understanding changes in energy acquisition can become difficult.', 
+  approach:'Analyzed energy-related dataset using Microsoft Excel to prepare the data for visualization. Utilized Tableau to develop interactive charts, comparative visualizations, and filters that allow users to explore annual energy consumption, examine sector-level differences, and identify changes in energy acquisition over time.', 
+  result:'Developed an interactive dashboard that transforms complex energy dataset into accessible visual insights. The final output provides a clearer understanding of Philippine energy consumption patterns, highlights differences across sectors, and illustrates annual energy acquisition trends to support data-driven analysis and interpretation.',
+  imgs:['images/PEA1.png'], 
+  links:[['Tableau','https://public.tableau.com:9443/views/PhilippineEnergyAnalysis/Dashboard1?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link'],['Read more (PDF)','files/PEA-RM.pdf']]
+ },
+ { // 02
+  name:'Superstore Sales Performance', cat:'Data Analytics', year:'2026', role:'Data Analyst', tools:'Power BI',
+  overview:'An interactive sales performance dashboard designed to evaluate business performance across multiple years, geographical regions, customer segments, and product categories. It provides a consolidated view of sales activities, profitability, and order performance through visual representations of key business metrics.', 
+  problem:'Evaluating overall business performance can be challenging when sales information is distributed across different regions, product categories, and customer segments. Without a centralized view of these metrics, identifying profitable products, recognizing sales patterns, and determining areas that require improvement can become difficult.', 
+  approach:'Organized and analyzed sales dataset using Microsoft Excel and Power BI to examine business performance across different dimensions. Developed interactive visualizations, KPI indicators, and dynamic filters to explore total sales, profit, order volume, regional performance, and product category contributions.', 
+  result:'Developed an interactive dashboard that transforms raw sales data into meaningful business insights. The final output provides a clearer understanding of sales trends, identifies high-performing and profitable product categories, and highlights differences in regional and customer segment performance to support informed business decisions.',
+  imgs:['images/SSP1.png'], 
+  links:[['Power BI File','files/SSPD.pbix'],['Read more (PDF)','files/SSP-RM.pdf']]
+ },
+ { // 03
+  name:'Philippine Mortality Analysis', cat:'Data Analytics', year:'2026', role:'Data Analyst', tools:'Microsoft Excel',
+  overview:'A data analytics project examining registered deaths in the Philippines from 2006 to 2018 using Microsoft Excel. It explores historical mortality patterns, yearly death counts, differences between male and female mortality, and the leading causes of death to provide a clearer understanding of mortality trends over time.', 
+  problem:'Understanding mortality patterns and identifying the leading causes of death can be challenging when working with large dataset spanning multiple years. Without proper data organization and analysis, comparing yearly death records, examining differences by sex, and recognizing changes in specific causes of death can be difficult.', 
+  approach:'Cleaned, transformed, and organized Philippine Statistics Authority (PSA) mortality data using Excel Power Query. Utilized PivotTables and analytical functions to examine yearly death counts, compare mortality figures by sex, and identify leading causes of death. Consolidated the findings into an interactive-style Excel dashboard using charts, summaries, and visual indicators.', 
+  result:'Developed an Excel dashboard presenting historical mortality trends and key findings from Philippine death records. The final output highlights yearly changes in registered deaths, male and female comparisons, leading causes of mortality, and variations in selected causes over time, making complex demographic data easier to explore and interpret.',
+  imgs:['images/PMA1.png'], 
+  links:[['Excel File','files/PMAD.pbix'],['Read more (PDF)','files/PMA-RM.pdf']]
+ },
+ { // 04
+  name:'MedSort', cat:'Web System & Academic Research', year:'2026', role:'UI/UX Developer, Data Researcher', tools:'Python',
+  overview:'MedSort is a web-based Inventory Management System (IMS) integrated with machine learning capabilities, developed to modernize and improve medical supply operations at the Cavite State University – Naic Campus Infirmary. The system provides a centralized platform for managing inventory records, monitoring stock levels, and identifying potential expiration risks through predictive analytics.', 
+  problem:'The infirmary reliance on manual, paper-based inventory records made it difficult to maintain accurate stock information and monitor medical supply conditions. This resulted in potential human errors, delayed stock recognition, inefficient inventory monitoring, and increased risks of overlooking supplies nearing expiration, highlighting the need for a more reliable and automated management system.', 
+  approach:'Designed a web-based inventory management system supported by machine learning algorithms to improve inventory monitoring and expiration risk assessment. Integrated an optimized K-Means clustering algorithm to group medical supplies based on risk levels and a Random Forest classifier optimized through GA-PSO to predict expiration risk categories.', 
+  result:'Successfully developed a centralized inventory management system that streamlines medical supply monitoring and supports more informed inventory decisions. The machine learning component achieved a 99.25% classification accuracy, while the system received an Excellent rating of 4.76 in its ISO/IEC 25010 software quality evaluation, demonstrating strong performance in classification and overall system quality.',
+  imgs:['images/M1.jpg','images/M2.jpg','images/M3.jpg','images/M4.jpg','images/M5.jpg','images/M6.jpg','images/M7.jpg'], 
+  links:[['Manuscript','files/M-RM.pdf']]
+ },
+ { // 05
+  name:'FitMate', cat:'Web System', year:'2024', role:'Full Stack Developer', tools:'Php, HTML/CSS, Javascript',
+  overview:'FitMate is a web-based fitness scheduling application designed to help users organize their workout routines, manage fitness activities, and maintain a more consistent exercise schedule. The platform combines activity scheduling and a reward system to encourage user participation and promote an engaging fitness experience.', 
+  problem:'Maintaining a consistent fitness routine can be challenging without proper planning, activity organization, and motivation. Users may struggle to keep track of their workout schedules and remain committed to their fitness goals, particularly without a system that encourages regular participation and recognizes their progress.', 
+  approach:'Designed and developed a web-based fitness scheduling application using PHP, HTML, CSS, and JavaScript. Implemented features that allow users to organize workout schedules, manage fitness activities, and monitor their participation. Integrated a reward system to encourage engagement by recognizing user activities and providing additional motivation to maintain consistent workout habits.', 
+  result:'Developed a functional fitness scheduling platform that provides users with a centralized way to organize workout routines and manage fitness activities. The integrated reward system adds an interactive element to the experience, encouraging regular participation and helping users stay motivated in maintaining their fitness routines.',
+  imgs:['images/F1.png','images/F2.png','images/F3.png','images/F4.png','images/F5.png'], 
+  links:[['GitHub','https://github.com/RyanEmmanuel5/Fitness-App-Scheduler']]
+ },
+ { // 06
+  name:'Tally', cat:'Web System', year:'2026', role:'Full Stack Developer', tools:'HTML/CSS, Javascript',
+  overview:'Tally is a web-based personal finance management application designed to help users organize, monitor, and manage their financial activities in one centralized platform. It provides tools for tracking assets, managing outstanding debts, and recording financial transactions, giving users a more structured way to monitor their overall financial position.', 
+  problem:'Managing personal finances across multiple records and platforms can make it difficult to maintain an accurate overview of one financial situation. Tracking assets, monitoring outstanding debts, and recording daily transactions separately can lead to disorganized financial information and make it challenging to assess spending activities and overall financial standing.', 
+  approach:'Designed and developed a responsive web application using HTML, CSS, and JavaScript, with Supabase integrated for database management and user authentication. Implemented dedicated sections for managing assets, recording transactions, and monitoring debts, alongside a centralized dashboard that presents relevant financial information.', 
+  result:'Developed a functional personal finance tracker that provides users with a centralized platform for managing and monitoring their financial activities. The application features secure user authentication, organized financial record management, and a responsive dashboard for viewing assets, debts, and transactions. The result is a more accessible and structured approach to personal finance tracking, allowing users to maintain a clearer picture of their financial standing.',
+  imgs:['images/T1.png','images/T2.png','images/T3.png','images/T4.png','images/T5.png'],
+  links:[['GitHub','https://github.com/RyanEmmanuel5/Tally']]
+ },
+ { // 07
+  name:'Tally', cat:'Branding & Identity', year:'2026', role:'Graphic & Brand Designer', tools:'Inkscape',
+  overview:'A conceptual brand identity exploring the relationship between counting, structure, and connection through a minimalist logomark. Designed for Tally, the identity translates the idea of numerical tracking into a distinctive visual symbol that combines geometric structure with a more tangible and meaningful design concept.',
+  problem:'Financial branding often relies on conventional numerical symbols, charts, and abstract geometric elements that can feel overly technical or impersonal. The challenge was to develop a visual identity that communicates accuracy, organization, and financial structure while introducing a more approachable character and a meaningful connection to local language and culture.', 
+  approach:'Developed a minimalist logomark inspired by the Tagalog word tali, meaning rope or something that binds. The design incorporates rising, interwoven diagonal segments that resemble bound rope strands, visually connecting the concept of tally with tali. Each segment represents an individual count, while their interconnected arrangement symbolizes how separate financial records and activities come together to form an organized whole. The geometric construction maintains a clean, contemporary appearance while preserving the cultural meaning behind the concept.', 
+  result:'Created a distinctive and minimalist brand mark that bridges financial precision with a culturally rooted visual metaphor. The final identity communicates organization, connection, and continuity through its interwoven structure, giving Tally a recognizable visual foundation that balances modern simplicity with meaningful local inspiration.',
+  imgs:['images/TT1.png','images/TT2.png','images/TT3.png'], 
+  links:[['Brand Guide','files/T-BG.pdf']]
+ },
+ { // 08
+  name:'Unravel Exe Co.', cat:'Branding & Identity', year:'2026', role:'Graphic & Brand Designer', tools:'Inkscape',
+  overview:'Unravel is a conceptual brand identity system for a startup virtual assistance agency focused on transforming operational complexity into clarity. The identity communicates the agency commitment to helping businesses organize tasks, simplify workflows, and navigate day-to-day operations through reliable and approachable support. Its visual direction balances modern design principles with a human-centered personality.', 
+  problem:'Virtual assistance agencies often adopt overly corporate and generic visual identities that emphasize professionalism but lack warmth and personality. This can make it difficult to communicate the approachable, structured, and supportive experience clients need, particularly when dealing with overwhelming tasks and complicated business operations. The challenge was to create an identity that conveys competence and reliability without appearing rigid or impersonal.', 
+  approach:'Developed a visual identity centered on the concept of untangling complexity and creating a clear path forward. Designed a continuous, single-line UEC monogram to represent the process of organizing interconnected tasks and bringing scattered elements into a unified structure. Complemented the mark with a warm, grounded color palette that balances contemporary professionalism with a welcoming personality. The overall visual direction emphasizes simplicity, continuity, and purposeful design.', 
+  result:'Created a cohesive brand identity that communicates intelligence, reliability, and approachability through a distinctive visual system. The continuous-line monogram reinforces the idea of turning complexity into order, while the carefully selected colors establish a balance between professionalism and human warmth. The resulting identity positions Unravel as a brand built around purposeful progress, organized support, and simplified business operations.',
+  imgs:['images/U0.png','images/U1.png','images/U2.png','images/U3.png'], 
+  links:[['Brand Guide','files/UEC-BG.pdf']]
+ },
+ { // 09
+  name:'Umi no Kaba', cat:'Digital Illustration', year:'2024', role:'Graphic Designer', tools:'Adobe Photoshop',
+  overview:'Umi no Kiba (Fangs of the Sea) is a Japanese-inspired digital illustration that explores the relationship between nature, strength, and movement through the depiction of a powerful tiger leaping across stylized ocean waves. Drawing inspiration from traditional Japanese art, the composition combines cultural motifs with contemporary graphic elements to create a bold visual interpretation of natures untamed force.', 
+  problem:'Combining traditional Japanese-inspired imagery with contemporary graphic elements requires careful consideration of visual balance, composition, and stylistic consistency. The challenge was to incorporate recognizable elements of Japanese art while introducing modern design details without losing the harmony and character of the original aesthetic. Achieving a composition that feels both culturally inspired and visually contemporary also required a thoughtful approach to color, movement, and visual hierarchy.', 
+  approach:'Developed a composition inspired by Ukiyo-e woodblock prints, incorporating stylized ocean waves, a dynamic tiger illustration, and traditional Japanese cloud motifs within a circular frame. Introduced binary-inspired border details and a contrasting palette of orange, blue, black, and white to establish a contemporary visual identity. Carefully arranged the elements to emphasize movement, create visual depth, and highlight the relationship between the tiger and its surrounding environment.', 
+  result:'Produced a bold and visually striking digital illustration that captures the untamed strength and commanding presence of a tiger against the immense force of the sea. The final composition brings together traditional Japanese-inspired aesthetics and modern graphic expression, creating a distinctive artwork that explores the contrast between cultural influences, natural power, and contemporary illustration.',
+  imgs:['images/project9.png'], 
+  links:[]
+ }
+];
+// ------------------------------------------------------------
+
+const app=document.getElementById('app'),pager=document.getElementById('pager'),pg=document.getElementById('pg');
+const calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.12});
+const pad=n=>String(n).padStart(2,'0');
+
+
+let timer;
+function render(){
+ clearInterval(timer);
+ const N=PROJECTS.length;
+ let id=parseInt(new URLSearchParams(location.search).get('id')||location.hash.slice(1),10);
+ if(!(id>=1&&id<=N))id=1;
+ const p=PROJECTS[id-1],prev=id===1?N:id-1,next=id===N?1:id+1,nx=PROJECTS[next-1];
+ document.title=p.name+' – Ryan Emmanuel Espinosa';
+ document.getElementById('ptname').textContent=p.name;
+ const imgs=p.imgs&&p.imgs.length?p.imgs:[PH,PH,PH,PH,PH],many=imgs.length>1;
+ pager.innerHTML=`<a class="ul" href="#${prev}">Prev</a><span><b>${pad(id)}</b> / ${pad(N)}</span><a class="ul" href="#${next}">Next</a>`;
+ const row=(h,t,d)=>`<section class="row rv" style="--d:${d||0}ms"><h2>${h}</h2><p>${t}</p></section>`;
+ const ls=(p.links||[]).filter(l=>l&&l[1]);
+ const linkHtml=ls.length?ls.map(([l,u])=>`<a class="ul" href="${u}" target="_blank" rel="noopener">${l} ↗</a>`).join('<br>'):'<span style="color:var(--mute)">Coming soon</span>';
+ app.innerHTML=`
+  <section class="head">
+   <div class="kicker">${pad(id)} — ${p.cat}</div>
+   <h1 aria-label="${p.name}">${(()=>{let n=0;return p.name.split(' ').map(w=>`<span class="w">${[...w].map(c=>`<i aria-hidden="true" style="--n:${n++}">${c}</i>`).join('')}</span>`).join('')})()}</h1>
+  </section>
+  <dl class="meta rv">
+   <div><dt>Year</dt><dd>${p.year}</dd></div><div><dt>Role</dt><dd>${p.role}</dd></div>
+   <div><dt>Category</dt><dd>${p.cat}</dd></div><div><dt>Tools</dt><dd>${p.tools}</dd></div>
+  </dl>
+  <div class="frame cover rv" tabindex="0"><div class="inner"><div class="track">${imgs.map((s,i)=>`<div class="slide"><img class="ph" src="${s}" alt="${p.name} image ${i+1}" draggable="false"></div>`).join('')}</div></div>${many?`<button class="nav pv" aria-label="Previous image">←</button><button class="nav nx" aria-label="Next image">→</button><div class="count"></div><div class="dots">${imgs.map((_,i)=>`<button aria-label="Show image ${i+1}"></button>`).join('')}</div>`:''}</div>
+${row('Overview',p.overview)}${row('Problem',p.problem)}${row('Approach',p.approach)}${row('Result',p.result)}${ls.length?row('Links',linkHtml):''}  <a class="next rv" href="#${next}"><small>Next project — ${pad(next)} / ${nx.cat}</small><strong>${nx.name}<em>→</em></strong></a>`;
+ app.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+ // carousel: one slide at a time. Arrows, dots, swipe/drag, arrow keys
+ const car=app.querySelector('.cover'),st=car.querySelector('.inner'),tr=car.querySelector('.track');
+ const dots=[...car.querySelectorAll('.dots button')],cnt=car.querySelector('.count');
+ let cur=0,drag=false,sx=0,dx=0;
+ const go=i=>{
+  cur=(i+imgs.length)%imgs.length;
+  tr.style.transition='';tr.style.transform=`translateX(${-cur*100}%)`;
+  dots.forEach((d,n)=>d.classList.toggle('cur',n===cur));
+  if(cnt)cnt.textContent=pad(cur+1)+' / '+pad(imgs.length);
+ };
+ go(0);
+ if(many){
+  car.querySelector('.pv').onclick=()=>go(cur-1);
+  car.querySelector('.nx').onclick=()=>go(cur+1);
+  dots.forEach((d,n)=>d.onclick=()=>go(n));
+  car.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(cur-1);if(e.key==='ArrowRight')go(cur+1)});
+  st.addEventListener('dragstart',e=>e.preventDefault());
+  st.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;drag=true;sx=e.clientX;dx=0;tr.style.transition='none';st.style.cursor='grabbing';st.setPointerCapture(e.pointerId)});
+  st.addEventListener('pointermove',e=>{if(!drag)return;dx=e.clientX-sx;tr.style.transform=`translateX(calc(${-cur*100}% + ${dx}px))`});
+  const up=()=>{if(!drag)return;drag=false;st.style.cursor='';go(Math.abs(dx)>Math.min(80,st.clientWidth*.15)?cur+(dx<0?1:-1):cur)};
+  st.addEventListener('pointerup',up);st.addEventListener('pointercancel',up);
+ }
+ if(!calm&&matchMedia('(hover:hover)').matches)app.querySelectorAll('.frame').forEach(f=>{
+  f.addEventListener('mousemove',e=>{const r=f.getBoundingClientRect();f.style.setProperty('--mx',((e.clientX-r.left)/r.width-.5)*14+'px');f.style.setProperty('--my',((e.clientY-r.top)/r.height-.5)*14+'px')});
+  f.addEventListener('mouseleave',()=>{f.style.setProperty('--mx','0px');f.style.setProperty('--my','0px')})});
+ scrollTo(0,0);
+}
+addEventListener('hashchange',()=>{document.documentElement.classList.remove('pt-d');render()});render();
+const root=document.documentElement;
+if(root.classList.contains('pt-on')){
+ try{sessionStorage.removeItem('pt')}catch(e){}
+ setTimeout(()=>root.classList.add('pt-out'),500);
+ setTimeout(()=>root.classList.remove('pt-on','pt-out'),1700);
+}
+
+let tick=false;
+addEventListener('scroll',()=>{if(tick)return;tick=true;requestAnimationFrame(()=>{
+ const max=document.documentElement.scrollHeight-innerHeight;
+ pg.style.transform='scaleX('+(max>0?scrollY/max:0)+')';tick=false})},{passive:true});
+</script>
+</body>
+</html>
